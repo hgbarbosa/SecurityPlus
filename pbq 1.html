@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Server Recommendations</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h3 class="mb-4">Windows Server Infrastructure Recommendations:</h3>
+        <form>
+            <!-- Updates Section -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="windowsUpdates" class="form-label">Windows Server updates services:</label>
+                    <select id="windowsUpdates" class="form-select">
+                        <option value="">Select</option>
+                        <option value="remove">Remove service</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="automaticUpdates" class="form-label">Automatic updates:</label>
+                    <select id="automaticUpdates" class="form-select">
+                        <option value="">Select</option>
+                        <option value="disable">Disable updates</option>
+                        <option value="wsus">Updates and reboots via WSUS</option>
+                        <option value="internet">Updates handled via Internet</option>
+                        <option value="scheduled-wsus">Updates scheduled by WSUS</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Accounts Section -->
+            <h5 class="mt-4">Category: Accounts</h5>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label for="adminAccess" class="form-label">Administrator access:</label>
+                    <select id="adminAccess" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="anonymousAccess" class="form-label">Anonymous access:</label>
+                    <select id="anonymousAccess" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="autologin" class="form-label">Autologin:</label>
+                    <select id="autologin" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="everyoneGroup" class="form-label">Everyone group:</label>
+                    <select id="everyoneGroup" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Firewall Section -->
+            <h5 class="mt-4">Category: Firewall</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="customExceptions" class="form-label">Custom Exceptions:</label>
+                    <select id="customExceptions" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="connections" class="form-label">Connections:</label>
+                    <select id="connections" class="form-select">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
