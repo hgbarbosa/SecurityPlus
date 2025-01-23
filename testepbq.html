@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Controls</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .dropzone {
+            border: 2px dashed #007bff;
+            height: 40px;
+            margin: 5px;
+        }
+
+        .dropzone.over {
+            border-color: #28a745;
+        }
+
+        .drag-item {
+            background-color: #007bff;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: grab;
+            text-align: center;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drag and Drop Controls</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Control Function</th>
+                <th>Control Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div class="dropzone" id="drop1"></div></td>
+                <td><select>
+                    <option>Select</option>
+                    <option>Preventive</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td><div class="dropzone" id="drop2"></div></td>
+                <td><select>
+                    <option>Select</option>
+                    <option>Preventive</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td><div class="dropzone" id="drop3"></div></td>
+                <td><select>
+                    <option>Select</option>
+                    <option>Technical</option>
+                </select></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="options">
+        <div class="drag-item" draggable="true" id="defensive">Defensive</div>
+        <div class="drag-item" draggable="true" id="detective">Detective</div>
+        <div class="drag-item" draggable="true" id="monitoring">Monitoring</div>
+        <div class="drag-item" draggable="true" id="reactive">Reactive</div>
+        <div class="drag-item" draggable="true" id="redundant">Redundant</div>
+        <div class="drag-item" draggable="true" id="responsive">Responsive</div>
+    </div>
+
+    <script>
+        const items = document.querySelectorAll('.drag-item');
+        const dropzones = document.querySelectorAll('.dropzone');
+
+        items.forEach(item => {
+            item.addEventListener('dragstart', dragStart);
+            item.addEventListener('dragend', dragEnd);
+        });
+
+        dropzones.forEach(zone => {
+            zone.addEventListener('dragover', dragOver);
+            zone.addEventListener('dragenter', dragEnter);
+            zone.addEventListener('dragleave', dragLeave);
+            zone.addEventListener('drop', dragDrop);
+        });
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            setTimeout(() => e.target.classList.add('hide'), 0);
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove('hide');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            e.target.classList.add('over');
+        }
+
+        function dragLeave(e) {
+            e.target.classList.remove('over');
+        }
+
+        function dragDrop(e) {
+            e.target.classList.remove('over');
+            const id = e.dataTransfer.getData('text/plain');
+            const draggable = document.getElementById(id);
+
+            // Remove item from old dropzone if already placed
+            dropzones.forEach(zone => {
+                if (zone.contains(draggable)) {
+                    zone.removeChild(draggable);
+                }
+            });
+
+            e.target.appendChild(draggable);
+        }
+    </script>
+</body>
+</html>
