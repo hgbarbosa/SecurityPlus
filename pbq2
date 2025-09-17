@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Firewall Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .scenario {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .rule-form {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            grid-column: span 2;
+            padding: 12px 25px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            min-height: 100px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .rule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .rule-table th, .rule-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .rule-table th {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Security+ Firewall Configuration Simulator</h1>
+        
+        <div class="scenario">
+            <h3>📋 Scenario:</h3>
+            <p>You are a network security administrator. Configure firewall rules to:</p>
+            <ul>
+                <li>Allow HTTP (port 80) from internal network (192.168.1.0/24)</li>
+                <li>Allow HTTPS (port 443) from anywhere</li>
+                <li>Deny SSH (port 22) from external networks</li>
+                <li>Allow DNS (port 53) from internal network</li>
+            </ul>
+        </div>
+
+        <div class="rule-form">
+            <label for="source">Source IP:</label>
+            <input type="text" id="source" placeholder="e.g., 192.168.1.0/24 or ANY">
+            
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" placeholder="e.g., 10.0.0.5 or ANY">
+            
+            <label for="port">Port:</label>
+            <input type="number" id="port" min="1" max="65535" placeholder="80">
+            
+            <label for="protocol">Protocol:</label>
+            <select id="protocol">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+                <option value="ICMP">ICMP</option>
+            </select>
+            
+            <label for="action">Action:</label>
+            <select id="action">
+                <option value="ALLOW">ALLOW</option>
+                <option value="DENY">DENY</option>
+            </select>
+            
+            <button onclick="addRule()">Add Firewall Rule</button>
+        </div>
+
+        <div class="output" id="output">
+            <h3>📊 Current Firewall Rules:</h3>
+            <table class="rule-table" id="ruleTable">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Port</th>
+                        <th>Protocol</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ruleTableBody">
+                </tbody>
+            </table>
+            <div id="feedback" style="margin-top: 15px;"></div>
+        </div>
+
+        <button onclick="checkConfiguration()" style="background: #2196f3; margin-top: 20px;">🔍 Check Configuration</button>
+    </div>
+
+    <script>
+        let rules = [];
+        
+        function addRule() {
+            const source = document.getElementById('source').value || 'ANY';
+            const destination = document.getElementById('destination').value || 'ANY';
+            const port = document.getElementById('port').value;
+            const protocol = document.getElementById('protocol').value;
+            const action = document.getElementById('action').value;
+            
+            if (!port) {
+                alert('Port is required!');
+                return;
+            }
+            
+            const rule = {
+                source: source,
+                destination: destination,
+                port: parseInt(port),
+                protocol: protocol,
+                action: action
+            };
+            
+            rules.push(rule);
+            updateRuleTable();
+            
+            // Clear form
+            document.getElementById('source').value = '';
+            document.getElementById('destination').value = '';
+            document.getElementById('port').value = '';
+        }
+        
+        function updateRuleTable() {
+            const tbody = document.getElementById('ruleTableBody');
+            tbody.innerHTML = '';
+            
+            rules.forEach((rule, index) => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = rule.source;
+                row.insertCell(1).textContent = rule.destination;
+                row.insertCell(2).textContent = rule.port;
+                row.insertCell(3).textContent = rule.protocol;
+                row.insertCell(4).textContent = rule.action;
+                row.insertCell(5).innerHTML = `<span style="color: #666;">Added</span>`;
+            });
+        }
+        
+        function checkConfiguration() {
+            const feedback = document.getElementById('feedback');
+            let score = 0;
+            let messages = [];
+            
+            // Check for required rules
+            const requiredRules = [
+                { port: 80, action: 'ALLOW', source: '192.168.1.0/24' },
+                { port: 443, action: 'ALLOW' },
+                { port: 22, action: 'DENY' },
+                { port: 53, action: 'ALLOW', source: '192.168.1.0/24' }
+            ];
+            
+            requiredRules.forEach(required => {
+                const found = rules.find(rule => {
+                    if (required.source) {
+                        return rule.port === required.port && 
+                               rule.action === required.action && 
+                               rule.source.includes('192.168.1');
+                    } else {
+                        return rule.port === required.port && rule.action === required.action;
+                    }
+                });
+                
+                if (found) {
+                    score += 25;
+                    messages.push(`✅ Port ${required.port} correctly configured`);
+                } else {
+                    messages.push(`❌ Missing or incorrect rule for port ${required.port}`);
+                }
+            });
+            
+            let resultClass = score >= 75 ? 'success' : 'error';
+            let resultText = score >= 75 ? '🎉 PASSED' : '❌ NEEDS IMPROVEMENT';
+            
+            feedback.innerHTML = `
+                <h4 class="${resultClass}">Score: ${score}/100 - ${resultText}</h4>
+                <ul>
+                    ${messages.map(msg => `<li>${msg}</li>`).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
